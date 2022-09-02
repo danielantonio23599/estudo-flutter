@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 final styleLabel  = TextStyle(color: Colors.black,fontSize: 16);
 
@@ -19,18 +20,10 @@ class _PrincipalState extends State<Principal>{
       body: Center(
         child: Column(children: <Widget>[
           Padding(padding: EdgeInsets.all(30), child: Text("Calculadora", style: styleLabel)),
-          Column(
-              children: [
-                Padding(padding: EdgeInsets.only(left: 10) , child: Text("Valor 1:", style: styleLabel)),
-                Padding(padding: EdgeInsets.only(left: 10), child: TextField(controller: _v1,),),
-              ], crossAxisAlignment: CrossAxisAlignment.start
-          ),
-          Column(
-              children: [
-                Padding(padding: EdgeInsets.only(left: 10,top: 20) , child: Text("Valor 2:", style: styleLabel)),
-                Padding(padding: EdgeInsets.only(left: 10), child: TextField(controller: _v2,),),
-              ], crossAxisAlignment: CrossAxisAlignment.start
-          ),
+          input(_v1,"1")
+          ,
+          input(_v2,"2")
+          ,
           Row(children: [
             Expanded(flex: 2, child: botao(' + ',_eventoBotaoSomar)),
             Expanded(flex: 2, child:botao(' - ',_eventoBotaoSubtrair)),
@@ -44,6 +37,15 @@ class _PrincipalState extends State<Principal>{
     );
   }
 
+  Widget input(TextEditingController text, String field){
+    return Column(
+        children: [
+          Padding(padding: EdgeInsets.only(left: 10,top: 20) , child: Text("Valor $field:", style: styleLabel)),
+          Padding(padding: EdgeInsets.only(left: 10), child: TextField(controller: text,inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))]),),
+        ], crossAxisAlignment: CrossAxisAlignment.start
+    );
+  }
+
   Widget botao(String texto, Function acao){
     return
       Padding(padding: EdgeInsets.all(10), child: ButtonTheme(
@@ -53,6 +55,7 @@ class _PrincipalState extends State<Principal>{
           child: Text(texto, style: TextStyle(color: Colors.black,fontSize: 14),),
         ),),);
   }
+
   TextEditingController _v1 = new TextEditingController();
   TextEditingController _v2 = new TextEditingController();
   double _total = 0;
